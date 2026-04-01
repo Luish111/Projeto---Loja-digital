@@ -4,123 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urbanix</title>
+    <title>Urbanix - Login</title>
+
+   <link rel="stylesheet" href="css/login.css">
 </head>
-
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        width: 100%;
-        height: 100%;
-    }
-
-    form {
-        width: 30%;
-        margin: 200px auto;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-    }
-
-    input {
-        display: block;
-        margin: 1% auto;
-        width: 250px;
-        height: 30px;
-    }
-
-    fieldset {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        border: 0;
-    }
-
-    img {
-        width: 100%;
-        display: flex;
-        height: 260px;
-        opacity: 1;
-    }
-
-    .popup {
-        visibility: hidden;
-        width: 160px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 8px 0;
-        margin: 10px auto;
-
-    }
-
-    .popup.show {
-        visibility: visible;
-    }
-</style>
 
 <body>
 
-    <form>
-        <div class="quadrado">
+<form onsubmit="handleLogin(event)">
 
-        </div>
-        <fieldset>
-            <img src="urbanix_versao_pequena.png" alt="0">
-        </fieldset>
+    <img src="urbanix_versao_pequena.png" alt="Logo">
 
-        <fieldset class="novo">
-            <input type="text" placeholder="User" id="user">
-        </fieldset>
+    <input type="email" id="user" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Senha" required>
 
-        <fieldset>
-            <input type="password" placeholder="Passaword" id="password">
-        </fieldset>
+    <button type="submit">Acessar</button>
 
-        <fieldset>
-            <input type="submit" value="Acessar" onclick="login_2(); return false;">
-        </fieldset>
+    <a href="esqueceu_senha.html">Esqueceu a senha?</a>
 
-        <fieldset>
-            <a href="esqueceu_senha.html">Esqueceu a senha</a>
-        </fieldset>
-        
+    <div class="popup" id="popup">
+        <span id="myPopup"></span>
+    </div>
 
-        <div class="popup" id="popup">
-            <span id="myPopup"></span>
-        </div>
-        
-    </form>
+</form>
 
-    <script>
-        function login_2() {
-            var login = document.getElementById('user').value;
-            var senha = document.getElementById('password').value;
-            var popup = document.getElementById('popup');
-            var texto = document.getElementById('myPopup');
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/auth.js"></script>
 
-            if (login === "adm" && senha === "123") {
-                texto.innerText = "Login efetuado com êxito!";
-                popup.style.backgroundColor = "green";
-                location.href = "spectra.html";
-            } else {
-                texto.innerText = "Usuário ou senha incorretos!";
-                popup.style.backgroundColor = "red";
-            }
+<script>
+async function handleLogin(event) {
+    event.preventDefault();
 
-            popup.classList.add("show");
-        }
-    </script>
+    const email = document.getElementById('user').value;
+    const senha = document.getElementById('password').value;
+
+    const popup = document.getElementById('popup');
+    const texto = document.getElementById('myPopup');
+
+    const { data, error } = await login(email, senha);
+
+    if (error) {
+        texto.innerText = "Email ou senha inválidos!";
+        popup.style.backgroundColor = "red";
+    } else {
+        texto.innerText = "Login realizado com sucesso!";
+        popup.style.backgroundColor = "green";
+
+        setTimeout(() => {
+            window.location.href = "spectra.html";
+        }, 1000);
+    }
+
+    popup.classList.add("show");
+}
+</script>
+
 </body>
-
 </html>
